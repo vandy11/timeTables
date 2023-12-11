@@ -12,11 +12,102 @@ namespace TimeTables
     {
         private List<string> teachers = new List<string>();
         private List<string> subjects = new List<string>();
-        private List<string> levels = new List<string>();
+        private List<int> levels = new List<int>();
 
-        List<DaySlotModel> daySlotModels;
-        List<SubjectTimesModel> subjectTimesModels;
-        List<LevelTeachersModel> teacherSubjectsModels;
+        private List<DaySlotModel> _daySlots=new List<DaySlotModel>();
+        public List<DaySlotModel> DaySlots
+        {
+            get
+            {
+                return _daySlots;
+            }
+            set
+            {
+                _daySlots = value;
+                try
+                {
+                    var daySlotsStr = JsonConvert.SerializeObject(DaySlots);
+                    var daySlotFile = Path.Combine(Application.StartupPath, "Data", "daySlots.json");
+
+                    File.WriteAllText(daySlotFile, daySlotsStr);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private List<SubjectTimesModel> _subjectTimes =new List<SubjectTimesModel>();
+        public List<SubjectTimesModel> SubjectTimes
+        {
+            get
+            {
+                return _subjectTimes;
+            }
+            set
+            {
+                _subjectTimes = value;
+                try
+                {
+                    var levelSubjectsStr = JsonConvert.SerializeObject(SubjectTimes);
+                    var levelSubjectsFile = Path.Combine(Application.StartupPath, "Data", "subjectTimes.json");
+
+                    File.WriteAllText(levelSubjectsFile, levelSubjectsStr);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private List<LevelTeachersModel> _levelTeachers = new List<LevelTeachersModel>();
+        public List<LevelTeachersModel> LevelTeachers
+        {
+            get { return _levelTeachers; }
+            set
+            {
+                _levelTeachers = value;
+                try
+                {
+                    var str = JsonConvert.SerializeObject(LevelTeachers);
+                    var filePath = Path.Combine(Application.StartupPath, "Data", "levelTeachers.json");
+                    File.WriteAllText(filePath, str);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private List<LevelClassroomsModel> _levelClassrooms =new List<LevelClassroomsModel>();
+        public List<LevelClassroomsModel> LevelClassrooms
+        {
+            get
+            {
+                return _levelClassrooms;
+            }
+            set
+            {
+                _levelClassrooms = value;
+                try
+                {
+                    var str = JsonConvert.SerializeObject(LevelClassrooms);
+                    var filePath = Path.Combine(Application.StartupPath, "Data", "levelClassrooms.json");
+                    File.WriteAllText(filePath, str);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
 
         bool teachersChanged, subjectsChanged, levelsChanged;
         public FormMain()
@@ -83,9 +174,9 @@ namespace TimeTables
 
             }
 
-            List<string> TryLoadLevelsData()
+            List<int> TryLoadLevelsData()
             {
-                var result = new List<string>();
+                var result = new List<int>();
                 try
                 {
                     var filePath = Path.Combine(Application.StartupPath, "Data", "levels.json");
@@ -94,11 +185,11 @@ namespace TimeTables
                         var contentStr = File.ReadAllText(filePath);
                         if (!string.IsNullOrEmpty(contentStr))
                         {
-                            result = JsonConvert.DeserializeObject<List<string>>(contentStr);
+                            result = JsonConvert.DeserializeObject<List<int>>(contentStr);
                         }
                         else
                         {
-                            result = new List<string>();
+                            result = new List<int>();
                         }
                     }
 
@@ -106,9 +197,9 @@ namespace TimeTables
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                    result = new List<string>();
+                    result = new List<int>();
                 }
-                return result ?? new List<string>();
+                return result ?? new List<int>();
 
             }
 
@@ -117,9 +208,7 @@ namespace TimeTables
                 var daySlotModels = new List<DaySlotModel>();
                 try
                 {
-
-
-                    var daySlotFile = Path.Combine(Application.StartupPath, "Data", "timeSlots.json");
+                    var daySlotFile = Path.Combine(Application.StartupPath, "Data", "daySlots.json");
                     if (File.Exists(daySlotFile))
                     {
                         var contentStr = File.ReadAllText(daySlotFile);
@@ -140,8 +229,6 @@ namespace TimeTables
                     daySlotModels = AppConstants.daySlotModels;
                 }
                 return daySlotModels ?? AppConstants.daySlotModels;
-
-
             }
 
             List<SubjectTimesModel> TryLoadSubjectTimes()
@@ -184,7 +271,7 @@ namespace TimeTables
                 return levelSubjectsModels ?? GetDefault();
             }
 
-            List<LevelTeachersModel> TryLoadTeacherSubjects()
+            List<LevelTeachersModel> TryLoadLevelTeachers()
             {
                 List<LevelTeachersModel> GetDefault()
                 {
@@ -241,7 +328,7 @@ namespace TimeTables
                 var teacherSubjectsModels = new List<LevelTeachersModel>();
                 try
                 {
-                    var filePath = Path.Combine(Application.StartupPath, "Data", "teacherSubjects.json");
+                    var filePath = Path.Combine(Application.StartupPath, "Data", "levelTeachers.json");
                     if (File.Exists(filePath))
                     {
                         var contentStr = File.ReadAllText(filePath);
@@ -264,7 +351,46 @@ namespace TimeTables
                 return teacherSubjectsModels ?? GetDefault();
             }
 
+            List<LevelClassroomsModel> TryLoadLevelClassrooms()
+            {
+                List<LevelClassroomsModel> GetDefault()
+                {
+                    List<LevelClassroomsModel> levelModels = new List<LevelClassroomsModel>();
+                    foreach (var level in (levels ?? new List<int>()).OrderBy(x => x))
+                    {
+                        LevelClassroomsModel levelModel = new LevelClassroomsModel { Level = level, ClassNames = new List<string>() };
+                        levelModels.Add(levelModel);
+                    }
+                    return levelModels;
+                }
+
+                var levelClassrooms = new List<LevelClassroomsModel>();
+                try
+                {
+                    var filePath = Path.Combine(Application.StartupPath, "Data", "levelClassrooms.json");
+                    if (File.Exists(filePath))
+                    {
+                        var contentStr = File.ReadAllText(filePath);
+                        if (!string.IsNullOrEmpty(contentStr))
+                        {
+                            levelClassrooms = JsonConvert.DeserializeObject<List<LevelClassroomsModel>>(contentStr);
+                        }
+                        else
+                        {
+                            levelClassrooms = GetDefault();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    levelClassrooms = GetDefault();
+                }
+
+                return levelClassrooms ?? GetDefault();
+            }
             #endregion
+
             teachers = TryLoadTeachersData();
             subjects = TryLoadSubjectsData();
             levels = TryLoadLevelsData();
@@ -273,9 +399,10 @@ namespace TimeTables
             textBoxSubjects.Text = string.Join(Environment.NewLine, subjects);
             textBoxLevels.Text = string.Join(Environment.NewLine, levels);
 
-            daySlotModels = TryLoadDaySlotsData();
-            subjectTimesModels = TryLoadSubjectTimes();
-            teacherSubjectsModels = TryLoadTeacherSubjects();
+            LevelClassrooms = TryLoadLevelClassrooms();
+            DaySlots = TryLoadDaySlotsData();
+            SubjectTimes = TryLoadSubjectTimes();
+            LevelTeachers = TryLoadLevelTeachers();
 
             timer1.Interval = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
             timer1.Tick += Timer1_Tick;
@@ -313,52 +440,6 @@ namespace TimeTables
 
         }
 
-        void SaveDaySlotsSetting()
-        {
-            try
-            {
-                var daySlotsStr = JsonConvert.SerializeObject(daySlotModels);
-                var daySlotFile = Path.Combine(Application.StartupPath, "Data", "timeSlots.json");
-
-                File.WriteAllText(daySlotFile, daySlotsStr);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        void SaveSubjectTimesSetting()
-        {
-            try
-            {
-                var levelSubjectsStr = JsonConvert.SerializeObject(subjectTimesModels);
-                var levelSubjectsFile = Path.Combine(Application.StartupPath, "Data", "subjectTimes.json");
-
-                File.WriteAllText(levelSubjectsFile, levelSubjectsStr);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        void SaveTeacherSubjectsSetting()
-        {
-            try
-            {
-                var str = JsonConvert.SerializeObject(teacherSubjectsModels);
-                var levelSubjectsFile = Path.Combine(Application.StartupPath, "Data", "teacherSubjects.json");
-                File.WriteAllText(levelSubjectsFile, str);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
 
         void SaveTeachers()
         {
@@ -413,36 +494,47 @@ namespace TimeTables
 
         private void ButtonTimeSlots_Click(object sender, EventArgs e)
         {
-            var formTimeSlots = new FormTimeSlots(daySlotModels) { StartPosition = FormStartPosition.CenterScreen };
-            formTimeSlots.ShowDialog();
-            SaveDaySlotsSetting();
+            var form = new FormTimeSlots(DaySlots) { StartPosition = FormStartPosition.CenterScreen, Owner = this };
+            form.ShowDialog();
 
+            DaySlots = form.DaySlotModels;
         }
 
         private void buttonSubjects_Click(object sender, EventArgs e)
         {
-            FormSubjectTimes form = new FormSubjectTimes(levels, subjects, subjectTimesModels) { StartPosition = FormStartPosition.CenterParent };
+            var form = new FormSubjectTimes(levels, subjects, SubjectTimes) { StartPosition = FormStartPosition.CenterParent, Owner = this };
             form.ShowDialog();
 
-            subjectTimesModels = form.SubjectTimesModels;
-
-            SaveSubjectTimesSetting();
+            SubjectTimes = form.SubjectTimesModels;
         }
-
-
 
         private void buttonTeacherSubjects_Click(object sender, EventArgs e)
         {
-            FormTeacherSubjects formTeacherSubjects = new FormTeacherSubjects(teachers, subjects, teacherSubjectsModels)
+            var formTeacherSubjects = new FormTeacherSubjects(teachers, subjects, LevelTeachers)
             {
-                StartPosition = FormStartPosition.CenterParent
+                StartPosition = FormStartPosition.CenterParent,
+                Owner = this
             };
 
             formTeacherSubjects.ShowDialog();
 
-            teacherSubjectsModels = formTeacherSubjects.TeacherSubjects;
+            LevelTeachers = formTeacherSubjects.TeacherSubjects;
 
-            SaveTeacherSubjectsSetting();
+        }
+        private void buttonClassroom_Click(object sender, EventArgs e)
+        {
+
+            var form = new FormLevelClassrooms(levels, LevelClassrooms)
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.CenterParent
+            };
+
+            form.ShowDialog();
+
+            LevelClassrooms = form.LevelClassrooms;
+
+
         }
 
         private void textBoxTeachers_TextChanged(object sender, EventArgs e)
@@ -469,8 +561,9 @@ namespace TimeTables
         private void textBoxLevels_TextChanged(object sender, EventArgs e)
         {
             var temp = from t in $"{textBoxLevels.Text}".Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                       where !string.IsNullOrEmpty(t)
-                       select t;
+                       where !string.IsNullOrEmpty(t) && int.TryParse(t, out int test)
+                       select int.Parse(t);
+
             levels = temp.ToList();
 
             levelsChanged = true;
@@ -502,26 +595,40 @@ namespace TimeTables
             }
             return null;
         }
+
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-
-            var teacherResources = teacherSubjectsModels.Clone();
-
-
-            if (daySlotModels.Any() && subjectTimesModels.Any() && teachers.Any())
+            bool isSubjectDoubleSlot(List<SubjectSlot> subjectDoubleSlots, SubjectSlot subject)
             {
-                foreach (var level in AppConstants.Levels)
-                {
-                    var teacherByLevel = teacherResources.Where(x => x.Level == level.Level);
+                var isValid = subjectDoubleSlots.Any(x => x.Subject == subject.Subject);
+                return isValid;
+            }
 
-                    foreach (var className in level.ClassNames)
+            var subjectTimesClone = SubjectTimes.Clone();
+
+            var teacherSubjects = LevelTeachers.Clone();
+
+            List<SubjectSlot> subjectDoubleSlots = new List<SubjectSlot>();
+
+            if (DaySlots.Any() && SubjectTimes.Any() && teachers.Any() && LevelClassrooms.Any() && LevelTeachers.Any())
+            {
+                foreach (var levelModel in LevelClassrooms.OrderBy(x => x.Level))
+                {
+                    //var teacherByLevel = teacherResources.Where(x => x.Level == level.Level);
+
+
+                    SubjectTimesModel subjectTimesByLevel = subjectTimesClone.FirstOrDefault(x => x.Level == levelModel.Level) ?? new SubjectTimesModel();
+
+                    subjectDoubleSlots = subjectTimesByLevel.SubjectSlots.Where(x => x.SlotPerWeek > 2).ToList();
+
+                    foreach (var className in levelModel.ClassNames)
                     {
                         StudentTimeTable studentTime = new StudentTimeTable
                         {
-                            Classroom = new ClassroomModel { Level = level.Level, ClassName = className }
+                            Classroom = new ClassroomModel { Level = levelModel.Level, ClassName = className }
                         };
 
-                        foreach (var daySlot in daySlotModels.OrderBy(x => x.Day))
+                        foreach (var daySlot in DaySlots.OrderBy(x => x.Day))
                         {
                             switch (daySlot.Day)
                             {
@@ -533,15 +640,42 @@ namespace TimeTables
 
                                     break;
                                 case DayOfWeek.Monday:
+                                    //refill slots for Monday
                                     studentTime.Monday = new DaySlotMapping();
                                     foreach (var timeSlot in daySlot.slots)
                                     {
 
-                                        //studentTime.Monday.SubjectTimeSlots.Add(new SubjectTimeSlot
-                                        //{
-                                        //    TimeSlot = timeSlot,
-                                        //    Subject
-                                        //});
+                                        //select subject and then select teacher for this slot
+
+                                        var subject = subjectTimesByLevel.SubjectSlots.FirstOrDefault(x => x.SlotPerWeek > 0);
+                                        if (subject != null)
+                                        {
+                                            if (isSubjectDoubleSlot(subjectDoubleSlots, subject))
+                                            {
+                                                for (var i = 0; i < 2; i++)
+                                                {
+                                                    if (subject.SlotPerWeek > 0)
+                                                    {
+                                                        SubjectTimeSlot subjectTimeSlot = new SubjectTimeSlot
+                                                        {
+                                                            TimeSlot = timeSlot,
+                                                            Subject = subject.Subject,
+                                                            Teacher = ""
+                                                        };
+
+                                                        studentTime.Monday.SubjectTimeSlots.Add(subjectTimeSlot);
+                                                        subject.SlotPerWeek--;
+                                                    }
+
+                                                }
+                                                if (subject.SlotPerWeek >= 2)
+                                                {
+
+                                                }
+                                            }
+                                        }
+
+
                                     }
 
                                     break;
@@ -590,5 +724,7 @@ namespace TimeTables
                 MessageBox.Show("Invalid Request.");
             }
         }
+
+
     }
 }

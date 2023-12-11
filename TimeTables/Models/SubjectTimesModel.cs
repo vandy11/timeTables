@@ -2,7 +2,7 @@
 {
     public class SubjectTimesModel
     {
-        public string Level { get; set; } = null!;
+        public int Level { get; set; }
         public List<SubjectSlot> SubjectSlots { get; set; } = new List<SubjectSlot>();
     }
     

@@ -9,7 +9,7 @@ namespace TimeTables
     {
         public List<SubjectTimesModel> SubjectTimesModels { get; set; }
         
-        public FormSubjectTimes(List<string> levels, List<string> subjects, List<SubjectTimesModel> subjectTimesModels)
+        public FormSubjectTimes(List<int> levels, List<string> subjects, List<SubjectTimesModel> subjectTimesModels)
         {
             SubjectTimesModels = subjectTimesModels;
             InitializeComponent();
@@ -21,7 +21,7 @@ namespace TimeTables
 
         }
 
-        void RenderDataGridView(List<string> levels, List<string> subjects, List<SubjectTimesModel> subjectTimesModels, DataGridView dataGridView)
+        void RenderDataGridView(List<int> levels, List<string> subjects, List<SubjectTimesModel> subjectTimesModels, DataGridView dataGridView)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add(new DataColumn($"colLevel", typeof(string)));
@@ -36,7 +36,7 @@ namespace TimeTables
                 ind++;
             }
 
-            foreach (string level in levels)
+            foreach (int level in levels)
             {
                 var byLevel = subjectTimesModels.Where(x => x.Level == level).FirstOrDefault();
 
@@ -80,38 +80,50 @@ namespace TimeTables
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            DataTable dt = (DataTable)dataGridViewSubjectTimes.DataSource;
-
-            List<SubjectTimesModel> list = new List<SubjectTimesModel>();
-
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                SubjectTimesModel subjectTimesModel = new SubjectTimesModel();
-                foreach (DataColumn col in row.Table.Columns)
+                DataTable dt = (DataTable)dataGridViewSubjectTimes.DataSource;
+
+                List<SubjectTimesModel> list = new List<SubjectTimesModel>();
+
+                foreach (DataRow row in dt.Rows)
                 {
-                    if (col.ColumnName == "colLevel")
+                    SubjectTimesModel subjectTimesModel = new SubjectTimesModel();
+                    foreach (DataColumn col in row.Table.Columns)
                     {
-                        subjectTimesModel.Level = $"{row[col]}";
-                    }
-                    else
-                    {
-                        try
+                        if (col.ColumnName == "colLevel")
                         {
-                            int slotPerWeek = (int)row[col];
-                            string subject = $"{col.Caption}";
-                            subjectTimesModel.SubjectSlots.Add(new SubjectSlot { Subject = subject, SlotPerWeek = slotPerWeek });
+                            
+                            var obj = row[col];
+
+                            subjectTimesModel.Level = Convert.ToInt32(row[col]);
                         }
-                        catch (Exception)
+                        else
                         {
+                            try
+                            {
+                                int slotPerWeek = (int)row[col];
+                                string subject = $"{col.Caption}";
+                                subjectTimesModel.SubjectSlots.Add(new SubjectSlot { Subject = subject, SlotPerWeek = slotPerWeek });
+                            }
+                            catch (Exception)
+                            {
+
+                            }
 
                         }
-
                     }
+
+                    list.Add(subjectTimesModel);
                 }
-
-                list.Add(subjectTimesModel);
+                SubjectTimesModels = list;
             }
-            SubjectTimesModels = list;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                e.Cancel = true;
+            }
+            
 
             base.OnClosing(e);
         }

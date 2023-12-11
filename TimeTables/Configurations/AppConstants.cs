@@ -45,14 +45,14 @@ namespace TimeTables.Configurations
         };
 
         //public static List<string> Levels = new List<string> { "7", "8", "9", "10", "11", "12" };
-        public static List<LevelModel> Levels = new List<LevelModel>
+        public static List<LevelClassroomsModel> Levels = new List<LevelClassroomsModel>
         {
-            new LevelModel { Level = 7, ClassNames = new List<string>{"7A","7B","7C", "7D"}},
-            new LevelModel { Level = 8, ClassNames = new List<string>{"8A","8B","8C", "8D"}},
-            new LevelModel { Level = 9, ClassNames = new List<string>{"9A","9B","9C", "9D"}},
-            new LevelModel { Level = 10, ClassNames = new List<string>{"10A", "10B" }},
-            new LevelModel { Level = 11, ClassNames = new List<string>{"11A", "11B"}},
-            new LevelModel { Level = 12, ClassNames = new List<string>{"12A", "12B" }}
+            new LevelClassroomsModel { Level = 7, ClassNames = new List<string>{"7A","7B","7C", "7D"}},
+            new LevelClassroomsModel { Level = 8, ClassNames = new List<string>{"8A","8B","8C", "8D"}},
+            new LevelClassroomsModel { Level = 9, ClassNames = new List<string>{"9A","9B","9C", "9D"}},
+            new LevelClassroomsModel { Level = 10, ClassNames = new List<string>{"10A", "10B" }},
+            new LevelClassroomsModel { Level = 11, ClassNames = new List<string>{"11A", "11B"}},
+            new LevelClassroomsModel { Level = 12, ClassNames = new List<string>{"12A", "12B" }}
         };
 
         //public static List<SubjectSlotModel> subjectSlots = new List<SubjectSlotModel>

@@ -4,20 +4,36 @@ namespace TimeTables.Extensions
 {
     public static class AppExtensions
     {
-        public static List<LevelTeachersModel> Clone(this List<LevelTeachersModel> levelTeachersModels)
+        public static List<LevelTeachersModel> Clone(this List<LevelTeachersModel> levelTeachers)
         {
-            if (levelTeachersModels == null) return new List<LevelTeachersModel>();
+            if (levelTeachers == null) return new List<LevelTeachersModel>();
 
             List<LevelTeachersModel> result = new List<LevelTeachersModel>();
 
-            foreach (var teacherSubjectsModel in levelTeachersModels)
+            foreach (var levelTeacher in levelTeachers)
             {
-                result.Add(teacherSubjectsModel);
+                result.Add(levelTeacher);
             }
 
             return result;
 
         }
+
+        public static List<SubjectTimesModel> Clone(this List<SubjectTimesModel> subjectTimes)
+        {
+            if (subjectTimes == null) return new List<SubjectTimesModel>();
+
+            List<SubjectTimesModel> result = new List<SubjectTimesModel>();
+
+            foreach (var subjectTime in subjectTimes)
+            {
+                result.Add(subjectTime);
+            }
+
+            return result;
+
+        }
+
 
         public static List<TeacherSupportModel> ToTeacherSlots(List<string> teachers, List<int> levels, List<LevelTeachersModel> levelTeachersModels, List<SubjectTimesModel> subjectTimes)
         {

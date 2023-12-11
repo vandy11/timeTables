@@ -43,12 +43,9 @@ namespace TimeTables
             dataGridView.Rows.Clear();
             if(daySlotModel != null)
             {
-                foreach (var item in daySlotModel.slots.OrderBy(x => x))
+                foreach (var item in daySlotModel.slots)
                 {
-                    if (!string.IsNullOrEmpty(item))
-                    {
-                        dataGridView.Rows.Add(item);
-                    }
+                    dataGridView.Rows.Add($"{item}");
                 }
             }
             
@@ -57,13 +54,14 @@ namespace TimeTables
         private DaySlotModel GetFromDataGridView(DataGridView dataGridView, DayOfWeek dayOfWeek)
         {
             DaySlotModel daySlotModel = new DaySlotModel { Day = dayOfWeek, slots = new List<string>() };
-            foreach (DataGridViewRow item in dataGridView.Rows)
+            foreach (DataGridViewRow row in dataGridView.Rows)
             {
-                string timeSlot = $"{item.Cells[0].Value}";
-                if (!string.IsNullOrEmpty(timeSlot))
+                if(row.IsNewRow == false)
                 {
+                    string timeSlot = $"{row.Cells[0].Value}";
                     daySlotModel.slots.Add(timeSlot);
                 }
+                
             }
             return daySlotModel;
         }

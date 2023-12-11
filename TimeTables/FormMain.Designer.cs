@@ -36,6 +36,7 @@
             buttonLevelSubjects = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             buttonTeacherSubjects = new Button();
+            buttonClassroom = new Button();
             panel1 = new Panel();
             textBoxTeachers = new TextBox();
             panel2 = new Panel();
@@ -45,6 +46,7 @@
             label2 = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             panel4 = new Panel();
+            btnViewTimeTables = new Button();
             flowLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -110,6 +112,7 @@
             flowLayoutPanel1.Controls.Add(buttonTimeSlots);
             flowLayoutPanel1.Controls.Add(buttonLevelSubjects);
             flowLayoutPanel1.Controls.Add(buttonTeacherSubjects);
+            flowLayoutPanel1.Controls.Add(buttonClassroom);
             flowLayoutPanel1.Dock = DockStyle.Top;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -126,6 +129,17 @@
             buttonTeacherSubjects.UseVisualStyleBackColor = true;
             buttonTeacherSubjects.Click += buttonTeacherSubjects_Click;
             // 
+            // buttonClassroom
+            // 
+            buttonClassroom.Location = new Point(413, 3);
+            buttonClassroom.Name = "buttonClassroom";
+            buttonClassroom.Size = new Size(184, 49);
+            buttonClassroom.TabIndex = 9;
+            buttonClassroom.Text = "Level & Classrooms";
+            buttonClassroom.UseMnemonic = false;
+            buttonClassroom.UseVisualStyleBackColor = true;
+            buttonClassroom.Click += buttonClassroom_Click;
+            // 
             // panel1
             // 
             panel1.Controls.Add(textBoxTeachers);
@@ -133,7 +147,7 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 60);
             panel1.Name = "panel1";
-            panel1.Size = new Size(261, 712);
+            panel1.Size = new Size(261, 640);
             panel1.TabIndex = 9;
             // 
             // textBoxTeachers
@@ -143,7 +157,7 @@
             textBoxTeachers.Multiline = true;
             textBoxTeachers.Name = "textBoxTeachers";
             textBoxTeachers.ScrollBars = ScrollBars.Both;
-            textBoxTeachers.Size = new Size(261, 692);
+            textBoxTeachers.Size = new Size(261, 620);
             textBoxTeachers.TabIndex = 2;
             textBoxTeachers.TextChanged += textBoxTeachers_TextChanged;
             // 
@@ -154,7 +168,7 @@
             panel2.Dock = DockStyle.Left;
             panel2.Location = new Point(261, 60);
             panel2.Name = "panel2";
-            panel2.Size = new Size(303, 712);
+            panel2.Size = new Size(303, 640);
             panel2.TabIndex = 10;
             // 
             // textBoxSubjects
@@ -164,7 +178,7 @@
             textBoxSubjects.Multiline = true;
             textBoxSubjects.Name = "textBoxSubjects";
             textBoxSubjects.ScrollBars = ScrollBars.Both;
-            textBoxSubjects.Size = new Size(303, 692);
+            textBoxSubjects.Size = new Size(303, 620);
             textBoxSubjects.TabIndex = 7;
             textBoxSubjects.Text = "ភាសាខ្មែរ\r\nភាសាបរទេស\r\nគណិតវិទ្យា\r\nផែនដី បរិស្ថានវិទ្យា\r\nគីមីវិទ្យា\r\nរូបវិទ្យា\r\nជីវវិទ្យា\r\nប្រវត្តិវិទ្យា\r\nភូមិវិទ្យា\r\nសីលធម៌ ពលរដ្ធ\r\nគេហកិច្ច\r\nសេដ្ធកិច្ច\r\nបំណិនជីវិត\r\nសិល្បៈ\r\nកីឡា\r\nសកម្មភាពពិសេស";
             textBoxSubjects.TextChanged += textBoxSubjects_TextChanged;
@@ -176,7 +190,7 @@
             panel3.Dock = DockStyle.Left;
             panel3.Location = new Point(564, 60);
             panel3.Name = "panel3";
-            panel3.Size = new Size(230, 712);
+            panel3.Size = new Size(230, 640);
             panel3.TabIndex = 11;
             // 
             // textBoxLevels
@@ -188,7 +202,7 @@
             textBoxLevels.Name = "textBoxLevels";
             textBoxLevels.ReadOnly = true;
             textBoxLevels.ScrollBars = ScrollBars.Both;
-            textBoxLevels.Size = new Size(230, 692);
+            textBoxLevels.Size = new Size(230, 620);
             textBoxLevels.TabIndex = 1;
             textBoxLevels.Text = "7\r\n8\r\n9\r\n10\r\n11";
             textBoxLevels.TextChanged += textBoxLevels_TextChanged;
@@ -206,18 +220,31 @@
             // panel4
             // 
             panel4.BackColor = SystemColors.ControlLight;
+            panel4.Controls.Add(btnViewTimeTables);
             panel4.Controls.Add(buttonGenerate);
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(794, 60);
             panel4.Name = "panel4";
-            panel4.Size = new Size(354, 712);
+            panel4.Size = new Size(354, 640);
             panel4.TabIndex = 12;
+            // 
+            // btnViewTimeTables
+            // 
+            btnViewTimeTables.Dock = DockStyle.Bottom;
+            btnViewTimeTables.Enabled = false;
+            btnViewTimeTables.Location = new Point(0, 591);
+            btnViewTimeTables.Name = "btnViewTimeTables";
+            btnViewTimeTables.Size = new Size(354, 49);
+            btnViewTimeTables.TabIndex = 10;
+            btnViewTimeTables.Text = "View Time Tables";
+            btnViewTimeTables.UseMnemonic = false;
+            btnViewTimeTables.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1148, 772);
+            ClientSize = new Size(1148, 700);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -257,5 +284,7 @@
         private Label label2;
         private System.Windows.Forms.Timer timer1;
         private Panel panel4;
+        private Button buttonClassroom;
+        private Button btnViewTimeTables;
     }
 }
